@@ -6,6 +6,7 @@ const logger = require("morgan");
 
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
+const coolRouter = require("./routes/cool");
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
+app.use("/users/cool", coolRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -37,5 +39,16 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render("error");
 });
+
+// Set up mongoose connection
+const mongoose = require("mongoose");
+mongoose.set("strictQuery", false);
+const mongoDB =
+  "mongodb+srv://akolomijec:qeauACR7muDh9NRG@locallibrarycluster.rnn0mci.mongodb.net/local_library?retryWrites=true&w=majority";
+
+main().catch((err) => console.log(err));
+async function main() {
+  await mongoose.connect(mongoDB);
+}
 
 module.exports = app;
